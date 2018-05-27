@@ -113,3 +113,214 @@ groovy -v
 在创建项目的时候,我们注意要选择groovy就可以了,图中`2`的部分 如果idea没能正确识别你的groovy和java的安装路径的话,需要手动选一下,之后就一路next,正常的创建项目就可以了
 
 ## 基础语法
+
+### HelloWorld
+
+创建好项目之后,我们就可以来写groovy代码了,之前说过groovy是完全兼容Java的,而兼容到什么程度呢,首先我们先按Java代码的语法来写一个Groovy的HelloWorld
+
+创建一个Groovy的类      
+![](http://47.93.60.69:88/img/pics/62DE5F39D4084AC183BDE67B208A1F63.png?x-oss-process=style/CfyInfo)
+
+我们叫它HelloGroovy
+
+```groovy
+class HelloGroovy {
+
+    public static void main(String[] args) {
+        System.out.println("Hello Groovy");
+    }
+}
+```
+
+运行一下:
+
+![](http://47.93.60.69:88/img/pics/41C7D1EFE5854BAFA2EEE2F8A852334E.png?x-oss-process=style/CfyInfo)
+
+可以看到我们可以正常输出了,观察代码发现,这不就完全是Java代码嘛,是的在Groovy中,你甚至可以写Java代码,那么groovy又在java代码的基础上可以简化成什么样子呢?      
+
+我们知道,java要求我们:
+- 所有的代码必须写在一个类中
+- 程序需要有一个主方法来运行
+- 每一行语句都以分号结束
+
+但是我们的groovy就要灵活很多了,这些Java中的强制性要求,在groovy中都不存在,修改groovy代码如下:
+
+```groovy
+System.out.println("Hello Groovy")
+```
+
+![](http://47.93.60.69:88/img/pics/F8FCD7BE1A6649A1B4111CBB7F8B0390.png?x-oss-process=style/CfyInfo)
+
+
+是的,就这一句,groovy是个脚本语言,它不需要类和方法,程序可以直接由上向下一行一行的执行,并且每一行的后面也不需要分号,我们还可以简化这输出语句:
+
+```groovy
+println "Hello Groovy"
+println("Hello")
+```
+
+直接写println即可,并且在groovy中 允许在 `顶级表达式`中省略参数列表的小括号,就是你直接调用方法的参数,可以省略,要是方法的参数还是一个方法,就不能省略小括号,例如:
+
+```groovy
+println add(3, 4)
+println(add(3, 4))
+
+def add(a, b) {
+    return a + b
+}
+```
+
+这个add的小括号就不能省略,这个后面到方法的时候再说,总之可以发现使用groovy来写java代码,要比纯Java代码简洁很多,恩,语法其实有点类似与Python呢,而Groovy的代码,也需要编译,编译成的文件也是.class文件,这就是为什么Groovy代码能够在JVM上运行,我们直接用idea打开HelloGroovy.class文件,idea会自动把编译后的字节码给我们反编译回来
+
+```java
+import groovy.lang.Binding;
+import groovy.lang.Script;
+import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.runtime.callsite.CallSite;
+
+public class HelloGroovy extends Script {
+    public HelloGroovy() {
+        CallSite[] var1 = $getCallSiteArray();
+        super();
+    }
+
+    public HelloGroovy(Binding context) {
+        CallSite[] var2 = $getCallSiteArray();
+        super(context);
+    }
+
+    public static void main(String... args) {
+        CallSite[] var1 = $getCallSiteArray();
+        var1[0].call(InvokerHelper.class, HelloGroovy.class, args);
+    }
+
+    public Object run() {
+        CallSite[] var1 = $getCallSiteArray();
+        return var1[1].call(var1[2].callGetProperty(System.class), "Hello Groovy");
+    }
+}
+
+```
+
+可以看到所有我们省略的东西,Groovy在编译成字节码的时候,编译器都给我们自动加回来了~
+
+### 变量
+
+#### 数据类型
+
+在groovy中可以使用所有Java的数据类型,我们知道在Java中数据类型分为基本数据类型,和引用类型,而在groovy中则没有基本数据类型了,在groovy中,所有的基本数据类型都会在编译的时候转换成其包装类型:
+
+```groovy
+int x = 10
+println x
+println x.class
+```
+
+![](http://47.93.60.69:88/img/pics/63D55ECE0F604F7584208ED76689AC6D.png?x-oss-process=style/CfyInfo)
+
+可以看到我们定义一个int类型的变量,在输出这个变量的类型的时候,发现它的类型是Integer,即它自动被转换成了引用类型
+
+#### 定义变量
+
+我们的Java是一门强类型语言,所有的变量的在定义的时候就需要声明好它的数据类型,例如:
+
+```java
+public void fun(){
+    // JAVA代码
+    String name = "张三";
+    int age = 18;
+}
+```
+
+但是Groovy并不是,它有类型推断机制,就比如我们上面Java代码,到了groovy中,除了可以写成和Java一模一样的以外,我们还可以这样写:
+
+```groovy
+def name = "张三"
+def age = 18
+
+println name
+println age
+println name.class
+println age.class
+```
+
+![运行结果](http://47.93.60.69:88/img/pics/05145C83D41346B28412D94E26C8AF74.png?x-oss-process=style/CfyInfo)
+
+可以看到,无论是String类型,还是int类型,我们都使用的是def来进行定义变量的,而在输出他们的数据类型的时候,Groovy也知道name就是String类型,age就是Integer类型,这就是类型推断,因为我们在定义变量的时候,直接为数据类型进行赋值了,那么编译器就会根据等号右面的值的数据类型,来决定等号左边变量的数据类型
+
+> 类型推论、类型推断、或隐含类型，是指编程语言在编译期中能够自动推导出值的数据类型的能力，它是一些强静态类型语言的特性。一般而言，函数式编程语言也具有此特性。自动推断类型的能力让很多编程任务变得容易，让程序员可以忽略类型标注的同时仍然允许类型检查
+
+其实Java中的类型推断机制也是逐步被加强的,例如在Java6中你需要这样定义一个String泛型的集合:
+
+```java
+// java6
+List<String> strings = new ArrayList<String>();
+```
+
+而到了Java7中我们可以这样写:
+
+```java
+// java7
+List<String> strings = new ArrayList<>();
+```
+
+可以看到编译器已经越来越智能了,不需要我们什么都写出来了,而java8中的lambda表达式也是这种类型推测机制更加强大的体现
+
+那么何时定义变量的时候使用强类型定义,何时定义变量的时候使用def呢,总结下来有2点:
+1. 如果变量只用于自己这个类而不会使用于其他模块,则使用def
+2. 如果用于其他类的话 那么则使用强类型定义
+
+其实无论是强类型定义还是弱类型定义,都是为了我们写程序更加的方便,易懂,那么如果我们这个模块要给外部使用的时候,如果我们也使用def的话,就会造成调用方的迷惑,不知道传给我们什么类型的参数好了
+
+##### 动态类型
+Java是一门静态类型的语言,即当数据的类型一旦确定下来之后,就不能够在进行更改了,否则编译都过不去:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        String s = "张三";
+        s = 18;
+    }
+}
+```
+
+![](http://47.93.60.69:88/img/pics/D587090B33E44F2AA72552C25F1F7E04.png?x-oss-process=style/CfyInfo)        
+
+那么换到我们的groovy中呢,我们在定义变量的时候可以不指定类型,而去使用def,那么我们可以写出如下代码:
+
+```groovy
+def a = "张三"
+println a.class
+println a
+a = 18
+println a.class
+println a
+a = 3.14
+println a.class
+println a
+```
+
+![](http://47.93.60.69:88/img/pics/32543F24A25E4998B4F2F58CA4ABC173.png?x-oss-process=style/CfyInfo)
+
+
+可以看到在groovy中我们就定义了一个a变量,而这个a变量可以根据运行时值的不同,而动态的改变它的数据类型,我们的Groovy是动态类型的语言,在写起来要比Java灵活很多,那么如果我们使用传统的强类型定义方式去定义一个变量,变量的类型是不是就不能动态的改变了呢,看代码
+
+```groovy
+String a = "张三"
+println a.class
+println a
+a = 18
+println a.class
+println a
+```
+
+![](http://47.93.60.69:88/img/pics/5AE9310D3C76458698D67C919C8470E3.png?x-oss-process=style/CfyInfo)
+
+可以看到,强类型定义的方式,我们的数据类型就被固定上了,不能再去改变了,并且如果两个数据类型没办法兼容的话,程序还会报错
+
+```groovy
+int a = 3
+a = '张三'
+```
+
+![](http://47.93.60.69:88/img/pics/5899FB5681354DEEABBB425FB462BA97.png?x-oss-process=style/CfyInfo)
