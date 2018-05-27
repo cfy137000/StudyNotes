@@ -324,3 +324,99 @@ a = '张三'
 ```
 
 ![](http://47.93.60.69:88/img/pics/5899FB5681354DEEABBB425FB462BA97.png?x-oss-process=style/CfyInfo)
+
+
+## String类型
+
+String类型是Java中非常常用的一种数据类型,甚至可以说是最常用的了,Groovy对Java中的String类型做了一些扩展,并把这些扩展封装进了GString(groovy.long.GString)中,就是说在Groovy中的字符串,对应两个类:String和GString,String类和Java中的String没有任何区别,主要看的是Groovy中特殊的GString
+
+### 定义String
+
+在Java中定义String是使用双引号:
+
+```java
+String a = "Hello World";
+```
+
+但是在Groovy中就不只只有这一种方法了,在Groovy中可以使用单引号,双引号和三引号(三个单引号:''')来定义一个String
+
+```Groovy
+def a = 'Hello'
+def b = "Hello"
+def c = '''Hello'''
+
+println a.class
+println b.class
+println c.class
+```
+
+![](http://47.93.60.69:88/img/pics/B35A7D49DC9647C7B53E5B708CDD248C.png?x-oss-process=style/CfyInfo)
+
+可以看到这三种方式都可以定义字符串,那么他们的区别是什么呢?
+
+#### 单引号
+
+在groovy中使用单引号定义的字符串就是Java中最最普通的字符串,不能插值
+
+#### 双引号
+在Groovy中如果双引号定义的字符串中没有插值表达式,那么双引号字符串就是普通的String类,如果有差值表达式的存在,则是GString的实例,插值表达式在下面会详细说明
+
+#### 三引号
+三引号是多行字符串,使用起来和Python是一样的,可以直接在里面写换行,而不需要使用类似于`\n`这种的符号来表示换行
+
+```groovy
+def s = '''锄禾日当午
+汗滴禾下土
+谁知盘中餐
+粒粒皆辛苦
+'''
+
+println s
+```
+
+![](http://47.93.60.69:88/img/pics/6302A4F4BE634AB387643DD2D6D343A2.png?x-oss-process=style/CfyInfo)
+
+需要注意的是,这个字符串的每一次换行,其实都是给你自动的添加一个\n的
+
+```groovy
+def s = '''锄禾日当午
+汗滴禾下土
+谁知盘中餐
+粒粒皆辛苦
+'''
+
+println s.contains('\n')
+println s.size()
+```
+
+![](http://47.93.60.69:88/img/pics/844A3039A3734BA9BC2704930A993E43.png?x-oss-process=style/CfyInfo)
+
+可以看到字符串中是包含`\n`这个字符的,并且字符串的长度是24,20个字加上4个`\n`,那么如果我不想换行呢,可以使用反斜杠来取消换行:
+
+```groovy
+def s = '''\
+锄禾日当午,\
+汗滴禾下土
+谁知盘中餐,\
+粒粒皆辛苦\
+'''
+
+println s
+```
+
+![](http://47.93.60.69:88/img/pics/92607B88A82745F7A12EF99147AA0474.png?x-oss-process=style/CfyInfo)
+
+
+### 插值表达式
+当使用双引号进行表示字符串时,我们可以使用字符串插值,就是用固定格式的字符串来进行占位,实际生成的时候,占位表达式会被动态的替换成响应的字符串
+
+在groovy中使用`${表达式}`的形式来进行占位:
+
+```groovy
+def youName = 'cfy'
+def sayHello = "Hello: ${youName}"
+println sayHello
+```
+
+![](http://47.93.60.69:88/img/pics/92F1A7B3871843EAB23BE2207F6ABEA2.png?x-oss-process=style/CfyInfo)
+
