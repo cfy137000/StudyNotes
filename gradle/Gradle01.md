@@ -420,3 +420,91 @@ println sayHello
 
 ![](http://47.93.60.69:88/img/pics/92F1A7B3871843EAB23BE2207F6ABEA2.png?x-oss-process=style/CfyInfo)
 
+插值表达式不光可以填写变量的值,还可以计算表达式的值,例如:
+
+```groovy
+def sum = "sum=${5 + 3}"
+println sum
+```
+
+![](http://47.93.60.69:88/img/pics/95F2C2B2CAA44E238E4B2B0348CD572F.png?x-oss-process=style/CfyInfo)
+
+#### 字符串的使用
+我们知道在groovy中如果使用差值表达,那么它的数据类型就会变成GString,而我们在使用的时候,其实是不需要关心其数据类型的,String和GString之间是可以相互融合的:
+
+```groovy
+def sum = "2 + 3 = ${2 + 3}"
+def result = echo sum // 在使用时可以相互融合
+println(result)
+println(result.class)
+
+String echo(String msg){
+    return msg
+}
+```
+
+我们定义了一个方法,接受的参数是String类型的,而sum则是GString类型的,但是发现我们的方法是可以正常调用的
+
+![](http://47.93.60.69:88/img/pics/1BCA539BB1C54E508333398F2D604F6A.png?x-oss-process=style/CfyInfo)
+
+
+
+### String类的方法
+在Groovy中,String类的方法可以有大支分为两类,一类是java.lang.String中的方法,另一类是GString的方法,我们主要看一下GString中的一些常用方法
+
+```groovy
+def str = 'groovy'
+// 把str使用-填充至18个字符,str在中间
+println str.center(18,'-')
+// 在原始字符串左边填充~至指定个个数
+println str.padLeft(8, '~')
+// 倒叙
+println str.reverse()
+// 首字母大写
+println str.capitalize()
+// 判断str是否是数字
+println str.isNumber()
+str = '89757'
+println str.isNumber()
+// 将字符串转换成整数类型
+def a = str.toInteger()
+println(a + ':' + a.class)
+```
+
+![](http://47.93.60.69:88/img/pics/2DA950FD39104C32BE65EDE1E8C17B2F.png?x-oss-process=style/CfyInfo)
+
+### 字符串运算
+在groovy中扩展了字符串的比较:
+
+```groovy
+def str = 'groovy'
+def str2 = 'Hello'
+println(str > str2) // true
+```
+
+两个字符串比大小,就是逐个比较每一个字符的ascii的大小,在groovy,字符串还可以进行计算,+就是字符串的拼接,-则是在原始字符串中删除指定字符串,只会删除第一个;*就是原始字符串输出几次
+
+```groovy
+str = 'hello'
+str2 = str - 'l'
+str3 = str * 3
+
+println str2
+println str3
+```
+
+![](http://47.93.60.69:88/img/pics/C8F0F84E984143A6A6C71356CEE96354.png?x-oss-process=style/CfyInfo)
+
+
+### 子串
+在groovy中取子串比较方便,可以使用..操作符来表示范围
+
+```groovy
+def str = 'groovy'
+println str[0] // 取一个字符
+println str[0..1] // 取范围
+println str[-2..-1] // 从倒数第二个字符取到倒数第一个字符
+println str[-1..0] // 从倒数第一个字符取到第0个字符,相当于倒叙输出
+```
+
+![](http://47.93.60.69:88/img/pics/44AB7EC182D54E86BE2649BF5DD65B1F.png?x-oss-process=style/CfyInfo)
